@@ -7,7 +7,7 @@ use std::ops::{Add, AddAssign, Mul, MulAssign, Sub, SubAssign};
 use crate::{One, Zero};
 
 /// Struct, that hold remain of n.
-#[derive(PartialEq, Eq, Clone, Debug, Default)]
+#[derive(PartialEq, Eq, Copy, Clone, Debug, Default)]
 pub struct Zn<const N: u32>(u32);
 
 impl<const N: u32> Zn<N> {
@@ -106,6 +106,15 @@ impl<const N: u32> MulAssign for Zn<N> {
     }
 }
 
+impl<const N: u32> MulAssign<i32> for Zn<N> {
+    fn mul_assign(&mut self, mut rhs: i32) {
+        if rhs < 0  {
+            rhs = N as i32 + (rhs % N as i32);
+        }
+        self.0 = (self.0 * (rhs as u32)) % N;
+    }
+}
+
 impl<const N: u32> Display for Zn<N> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "<Z{} {}>", N, self.value())
@@ -117,11 +126,11 @@ mod zn_tests {
     use super::Zn;
     use crate::{One, Zero};
 
-    fn check_add(lhs: u32, rhs: u32, ans5: u32, ans10: u32, ans100: u32) {
-        type Z5 = Zn<5>;
-        type Z10 = Zn<10>;
-        type Z100 = Zn<100>;
+    type Z5 = Zn<5>;
+    type Z10 = Zn<10>;
+    type Z100 = Zn<100>;
 
+    fn check_add(lhs: u32, rhs: u32, ans5: u32, ans10: u32, ans100: u32) {
         let a = Z5::new(lhs);
         let b = Z5::new(rhs);
         assert_eq!(
@@ -157,10 +166,6 @@ mod zn_tests {
     }
 
     fn check_add_assign(lhs: u32, rhs: u32, ans5: u32, ans10: u32, ans100: u32) {
-        type Z5 = Zn<5>;
-        type Z10 = Zn<10>;
-        type Z100 = Zn<100>;
-
         let mut a = Z5::new(lhs);
         a += Z5::new(rhs);
         assert_eq!(a.value(), ans5, "{} += {} is not {} for Z5", lhs, rhs, ans5);
@@ -189,10 +194,6 @@ mod zn_tests {
     }
 
     fn check_rem(lhs: u32, rhs: u32, ans5: u32, ans10: u32, ans100: u32) {
-        type Z5 = Zn<5>;
-        type Z10 = Zn<10>;
-        type Z100 = Zn<100>;
-
         let a = Z5::new(lhs);
         let b = Z5::new(rhs);
         assert_eq!(
@@ -228,10 +229,6 @@ mod zn_tests {
     }
 
     fn check_rem_assign(lhs: u32, rhs: u32, ans5: u32, ans10: u32, ans100: u32) {
-        type Z5 = Zn<5>;
-        type Z10 = Zn<10>;
-        type Z100 = Zn<100>;
-
         let mut a = Z5::new(lhs);
         a -= Z5::new(rhs);
         assert_eq!(a.value(), ans5, "{} -= {} is not {} for Z5", lhs, rhs, ans5);
@@ -260,10 +257,6 @@ mod zn_tests {
     }
 
     fn check_mul(lhs: u32, rhs: u32, ans5: u32, ans10: u32, ans100: u32) {
-        type Z5 = Zn<5>;
-        type Z10 = Zn<10>;
-        type Z100 = Zn<100>;
-
         let a = Z5::new(lhs);
         let b = Z5::new(rhs);
         assert_eq!(
@@ -299,10 +292,6 @@ mod zn_tests {
     }
 
     fn check_mul_assign(lhs: u32, rhs: u32, ans5: u32, ans10: u32, ans100: u32) {
-        type Z5 = Zn<5>;
-        type Z10 = Zn<10>;
-        type Z100 = Zn<100>;
-
         let mut a = Z5::new(lhs);
         a *= Z5::new(rhs);
         assert_eq!(a.value(), ans5, "{} *= {} is not {} for Z5", lhs, rhs, ans5);
