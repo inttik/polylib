@@ -22,8 +22,3 @@ Docs can be found, using:
 ```
 cargo doc --open
 ``` 
-
-
-## TODO
-- [ ] Matrix class + tests
-- [ ] more zn tests? likely no.

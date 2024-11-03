@@ -4,6 +4,7 @@ use std::ops::{Add, Mul};
 use polylib::polynom::Polynomial;
 use polylib::{One, Zero};
 
+#[allow(dead_code)]
 pub fn same_coef<T, U>(poly: Polynomial<T, U>, coef: Vec<T>)
 where
     T: Clone + Zero + PartialEq + Eq + Debug,

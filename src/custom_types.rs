@@ -5,4 +5,3 @@ pub mod matrix;
 
 pub use zn::Zn;
 pub use matrix::Matrix;
-
